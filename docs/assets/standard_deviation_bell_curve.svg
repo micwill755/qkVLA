@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" role="img" aria-labelledby="title desc">
+  <title id="title">Standard deviation on a bell curve</title>
+  <desc id="desc">A clean bell curve diagram with orange and yellow sigma bands, thin green guide lines, and labels for 68, 95, and 99.7 percent of data.</desc>
+  <rect width="1100" height="700" fill="#ffffff"/>
+
+  <!-- Sigma positions are evenly spaced around the mean. -->
+  <!-- -3σ 160, -2σ 290, -σ 420, mean 550, +σ 680, +2σ 810, +3σ 940 -->
+
+  <!-- Outer 99.7% band. -->
+  <path
+    d="M90 560
+       C132 556, 154 548, 160 546
+       C210 528, 252 482, 290 420
+       C342 334, 382 208, 420 140
+       C458 72, 510 48, 550 48
+       C590 48, 642 72, 680 140
+       C718 208, 758 334, 810 420
+       C848 482, 890 528, 940 546
+       C946 548, 968 556, 1010 560
+       L1010 560 L90 560 Z"
+    fill="#ef9800"/>
+
+  <!-- Middle 95% band. -->
+  <path
+    d="M290 560
+       L290 420
+       C342 334, 382 208, 420 140
+       C458 72, 510 48, 550 48
+       C590 48, 642 72, 680 140
+       C718 208, 758 334, 810 420
+       L810 560 Z"
+    fill="#f7b900"/>
+
+  <!-- Inner 68% band. -->
+  <path
+    d="M420 560
+       L420 140
+       C458 72, 510 48, 550 48
+       C590 48, 642 72, 680 140
+       L680 560 Z"
+    fill="#ffd400"/>
+
+  <!-- Thick black curve outline. -->
+  <path
+    d="M90 560
+       C132 556, 154 548, 160 546
+       C210 528, 252 482, 290 420
+       C342 334, 382 208, 420 140
+       C458 72, 510 48, 550 48
+       C590 48, 642 72, 680 140
+       C718 208, 758 334, 810 420
+       C848 482, 890 528, 940 546
+       C946 548, 968 556, 1010 560"
+    fill="none"
+    stroke="#000000"
+    stroke-width="9"
+    stroke-linecap="round"/>
+
+  <!-- Thin guide lines. -->
+  <line x1="160" y1="140" x2="160" y2="612" stroke="#477a35" stroke-width="2"/>
+  <line x1="290" y1="140" x2="290" y2="612" stroke="#477a35" stroke-width="2"/>
+  <line x1="420" y1="140" x2="420" y2="612" stroke="#477a35" stroke-width="2"/>
+  <line x1="550" y1="48" x2="550" y2="255" stroke="#000000" stroke-width="4"/>
+  <line x1="550" y1="505" x2="550" y2="612" stroke="#000000" stroke-width="4"/>
+  <line x1="680" y1="140" x2="680" y2="612" stroke="#477a35" stroke-width="2"/>
+  <line x1="810" y1="140" x2="810" y2="612" stroke="#477a35" stroke-width="2"/>
+  <line x1="940" y1="140" x2="940" y2="612" stroke="#477a35" stroke-width="2"/>
+
+  <!-- Percentage labels and arrows. -->
+  <text x="550" y="295" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">
+    68% of data
+  </text>
+  <line x1="432" y1="286" x2="455" y2="286" stroke="#000000" stroke-width="2"/>
+  <path d="M420 286 L436 277 L436 295 Z" fill="#000000"/>
+  <line x1="645" y1="286" x2="668" y2="286" stroke="#000000" stroke-width="2"/>
+  <path d="M680 286 L664 277 L664 295 Z" fill="#000000"/>
+
+  <text x="550" y="385" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">
+    95% of data
+  </text>
+  <line x1="302" y1="376" x2="455" y2="376" stroke="#000000" stroke-width="2"/>
+  <path d="M290 376 L306 367 L306 385 Z" fill="#000000"/>
+  <line x1="645" y1="376" x2="798" y2="376" stroke="#000000" stroke-width="2"/>
+  <path d="M810 376 L794 367 L794 385 Z" fill="#000000"/>
+
+  <text x="550" y="480" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">
+    99.7% of data
+  </text>
+  <line x1="172" y1="471" x2="430" y2="471" stroke="#000000" stroke-width="2"/>
+  <path d="M160 471 L176 462 L176 480 Z" fill="#000000"/>
+  <line x1="670" y1="471" x2="928" y2="471" stroke="#000000" stroke-width="2"/>
+  <path d="M940 471 L924 462 L924 480 Z" fill="#000000"/>
+
+  <!-- One-sigma callout, kept outside the curve so it does not collide. -->
+  <text x="225" y="78" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-style="italic" font-weight="700" fill="#000000">
+    one standard deviation
+  </text>
+  <path
+    d="M160 132
+       C160 114, 172 108, 190 108
+       L214 108
+       L225 90
+       L236 108
+       L260 108
+       C278 108, 290 114, 290 132"
+    fill="none"
+    stroke="#000000"
+    stroke-width="4"
+    stroke-linecap="round"/>
+
+  <!-- Sigma labels. -->
+  <text x="160" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">-3σ</text>
+  <text x="290" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">-2σ</text>
+  <text x="420" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">-σ</text>
+  <text x="550" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">0</text>
+  <text x="680" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">+σ</text>
+  <text x="810" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">+2σ</text>
+  <text x="940" y="660" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="700" fill="#000000">+3σ</text>
+</svg>

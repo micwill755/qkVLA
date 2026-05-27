@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 420" role="img" aria-labelledby="title desc">
+  <title id="title">Gaussian noise added to a clean value</title>
+  <desc id="desc">A diagram showing clean data x zero, Gaussian noise epsilon sampled from a bell curve, and a scaled noisy value x t.</desc>
+  <rect width="860" height="420" fill="#ffffff"/>
+
+  <text x="40" y="48" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="700" fill="#000000">
+    Gaussian noise step
+  </text>
+
+  <g transform="translate(42 92)">
+    <rect x="0" y="0" width="210" height="190" rx="10" fill="#fff3b0" stroke="#000000" stroke-width="2"/>
+    <text x="24" y="42" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#000000">
+      clean data
+    </text>
+    <text x="24" y="86" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#000000">
+      x_0 = 0.80
+    </text>
+    <line x1="24" y1="126" x2="186" y2="126" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="154" cy="126" r="10" fill="#f2a000" stroke="#000000" stroke-width="2"/>
+    <text x="24" y="164" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#000000">
+      original signal
+    </text>
+  </g>
+
+  <text x="286" y="198" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#000000">
+    +
+  </text>
+
+  <g transform="translate(338 92)">
+    <rect x="0" y="0" width="250" height="190" rx="10" fill="#fff3b0" stroke="#000000" stroke-width="2"/>
+    <text x="24" y="36" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#000000">
+      scaled noise
+    </text>
+    <text x="24" y="70" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="#000000">
+      0.10 * epsilon
+    </text>
+    <text x="24" y="98" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#000000">
+      epsilon = -0.37
+    </text>
+    <text x="24" y="124" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#000000">
+      scaled = -0.037
+    </text>
+
+    <path
+      d="M34 164
+         C58 164, 68 162, 82 157
+         C99 151, 108 135, 125 135
+         C142 135, 151 151, 168 157
+         C182 162, 198 164, 222 164"
+      fill="none"
+      stroke="#000000"
+      stroke-width="2.5"
+      stroke-linecap="round"/>
+    <line x1="125" y1="135" x2="125" y2="172" stroke="#477a35" stroke-width="2"/>
+    <circle cx="101" cy="154" r="7" fill="#f2a000" stroke="#000000" stroke-width="2"/>
+    <text x="24" y="181" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#000000">
+      sample from N(0, 1)
+    </text>
+  </g>
+
+  <text x="620" y="198" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" fill="#000000">
+    =
+  </text>
+
+  <g transform="translate(674 92)">
+    <rect x="0" y="0" width="146" height="190" rx="10" fill="#fff3b0" stroke="#000000" stroke-width="2"/>
+    <text x="22" y="42" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#000000">
+      noisy
+    </text>
+    <text x="22" y="86" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#000000">
+      0.763
+    </text>
+    <line x1="22" y1="126" x2="124" y2="126" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="100" cy="126" r="10" fill="#f2a000" stroke="#000000" stroke-width="2"/>
+    <text x="22" y="164" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#000000">
+      x_t
+    </text>
+  </g>
+
+  <g transform="translate(100 332)">
+    <rect x="0" y="0" width="660" height="54" rx="8" fill="#fff3b0" stroke="#000000" stroke-width="2"/>
+    <text x="24" y="35" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#000000">
+      noisy_x = x_0 + scale * epsilon = 0.80 + 0.10 * (-0.37) = 0.763
+    </text>
+  </g>
+</svg>
