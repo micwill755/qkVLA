@@ -45,19 +45,71 @@ class DDPMScheduler(nn.Module):
 
 
 class FlowMatchingPath:
-    """Linear flow matching path between clean data and Gaussian noise."""
+    """Linear flow matching path between noise and clean data.
+
+    This follows the GR00T/OpenPI implementation convention:
+    x_t = (1 - t) * noise + t * data, with target velocity data - noise.
+    """
 
     def sample_path(
-        self, x0: torch.Tensor, t: torch.Tensor, x1: torch.Tensor | None = None
+        self, data: torch.Tensor, t: torch.Tensor, noise: torch.Tensor | None = None
     ) -> tuple[torch.Tensor, torch.Tensor]:
-        x1 = torch.randn_like(x0) if x1 is None else x1
-        t_view = t.view(t.shape[0], *([1] * (x0.ndim - 1)))
-        xt = (1.0 - t_view) * x0 + t_view * x1
-        velocity = x1 - x0
+        noise = torch.randn_like(data) if noise is None else noise
+        t_view = t.view(t.shape[0], *([1] * (data.ndim - 1)))
+        xt = (1.0 - t_view) * noise + t_view * data
+        velocity = data - noise
         return xt, velocity
+
+    @torch.no_grad()
+    def euler_sample(
+        self,
+        step_fn,
+        shape: tuple[int, ...],
+        num_steps: int = 10,
+        device: torch.device | str | None = None,
+    ) -> torch.Tensor:
+        device = device or "cpu"
+        x = torch.randn(shape, device=device)
+        dt = 1.0 / num_steps
+        for idx in range(num_steps):
+            t = torch.full((shape[0],), idx / num_steps, device=device, dtype=x.dtype)
+            x = x + dt * step_fn(x, t)
+        return x
+
+
+class OpenPIFlowMatchingPath:
+    """OpenPI pi0/pi0.5 flow convention.
+
+    OpenPI trains with x_t = t * noise + (1 - t) * actions and target
+    u_t = noise - actions, then samples from t=1 down to t=0.
+    """
+
+    def sample_path(
+        self, data: torch.Tensor, t: torch.Tensor, noise: torch.Tensor | None = None
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        noise = torch.randn_like(data) if noise is None else noise
+        t_view = t.view(t.shape[0], *([1] * (data.ndim - 1)))
+        xt = t_view * noise + (1.0 - t_view) * data
+        velocity = noise - data
+        return xt, velocity
+
+    @torch.no_grad()
+    def euler_sample(
+        self,
+        step_fn,
+        shape: tuple[int, ...],
+        num_steps: int = 10,
+        device: torch.device | str | None = None,
+    ) -> torch.Tensor:
+        device = device or "cpu"
+        x = torch.randn(shape, device=device)
+        dt = -1.0 / num_steps
+        for idx in range(num_steps):
+            t = torch.full((shape[0],), 1.0 + idx * dt, device=device, dtype=x.dtype)
+            x = x + dt * step_fn(x, t)
+        return x
 
 
 def gather_by_timestep(values: torch.Tensor, t: torch.Tensor, ndim: int) -> torch.Tensor:
     out = values[t]
     return out.view(t.shape[0], *([1] * (ndim - 1)))
-

@@ -15,6 +15,7 @@ def fake_batch() -> dict[str, torch.Tensor]:
         "images": torch.randn(batch, 3, 32, 32),
         "token_ids": torch.randint(0, 128, (batch, 12)),
         "proprio": torch.randn(batch, 10),
+        "egomotion_history": torch.randn(batch, 4, 12),
         "noisy_actions": torch.randn(batch, horizon, action_dim),
         "t": torch.randint(0, 100, (batch,)),
     }
@@ -42,7 +43,7 @@ def main() -> None:
         batch["token_ids"],
         batch["proprio"],
         batch["noisy_actions"],
-        batch["t"],
+        batch["t"].float() / 100,
     )
     pi05_out = pi05(
         batch["images"],
@@ -55,6 +56,7 @@ def main() -> None:
         batch["images"],
         batch["token_ids"],
         batch["proprio"],
+        batch["egomotion_history"],
         batch["noisy_actions"],
         batch["t"],
     )
@@ -68,4 +70,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

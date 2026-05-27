@@ -3,8 +3,9 @@ from __future__ import annotations
 import torch
 from torch import nn
 
+from qkvla.models.action_experts import AlpamayoDiffusionTrajectoryDecoder
 from qkvla.models.common import ToyVLMContext
-from qkvla.modules.action_denoiser import ActionDenoiserTransformer
+from qkvla.modules.encoders import NumericSequenceEncoder
 from qkvla.modules.transformer import TransformerBlock
 
 
@@ -51,17 +52,20 @@ class AlpamayoStyleVLA(nn.Module):
         action_dim: int,
         horizon: int,
         model_dim: int = 256,
+        egomotion_dim: int = 12,
+        expert_depth: int = 12,
     ) -> None:
         super().__init__()
         self.context_encoder = ToyVLMContext(
             image_channels, patch_size, vocab_size, proprio_dim, model_dim
         )
+        self.egomotion_encoder = NumericSequenceEncoder(egomotion_dim, model_dim)
         self.reasoning = ReasoningBridge(model_dim)
-        self.trajectory_expert = ActionDenoiserTransformer(
-            action_dim=action_dim,
+        self.trajectory_expert = AlpamayoDiffusionTrajectoryDecoder(
+            trajectory_dim=action_dim,
             horizon=horizon,
             model_dim=model_dim,
-            prediction_type="noise",
+            depth=expert_depth,
         )
 
     def forward(
@@ -69,10 +73,12 @@ class AlpamayoStyleVLA(nn.Module):
         images: torch.Tensor,
         token_ids: torch.Tensor,
         proprio: torch.Tensor,
+        egomotion_history: torch.Tensor,
         noisy_trajectory: torch.Tensor,
         diffusion_t: torch.Tensor,
     ) -> dict[str, torch.Tensor]:
         context = self.context_encoder(images, token_ids, proprio)
+        context = torch.cat((context, self.egomotion_encoder(egomotion_history)), dim=1)
         reasoning_tokens = self.reasoning(context)
         expert_context = torch.cat((context, reasoning_tokens), dim=1)
         pred_noise = self.trajectory_expert(
@@ -82,4 +88,3 @@ class AlpamayoStyleVLA(nn.Module):
             "reasoning_tokens": reasoning_tokens,
             "pred_noise": pred_noise,
         }
-

@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 720" role="img" aria-labelledby="title desc">
+  <title id="title">Detailed GR00T-style architecture</title>
+  <desc id="desc">A detailed GR00T-style VLA architecture diagram with vision and text inputs, frozen VLM, state and action encoders, DiT blocks, action decoder, motor action output, and iterative denoising loop.</desc>
+  <rect width="1320" height="720" fill="#ffffff"/>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #000000; }
+    .box { fill: #f2f2f2; stroke: #4b5563; stroke-width: 2; }
+    .emb { fill: #d9ead3; stroke: #4b5563; stroke-width: 2; }
+    .tokenV { fill: #c084fc; stroke: #4b5563; stroke-width: 1.2; }
+    .tokenT { fill: #0b64c0; stroke: #4b5563; stroke-width: 1.2; }
+    .tokenS { fill: #ef6f6c; stroke: #4b5563; stroke-width: 1.2; }
+    .tokenA { fill: #fff0d2; stroke: #4b5563; stroke-width: 1.2; }
+    .tokenO { fill: #ff9800; stroke: #4b5563; stroke-width: 1.2; }
+    .arrow { stroke: #4b5563; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .thin { stroke: #4b5563; stroke-width: 1.6; fill: none; }
+    .dash { stroke: #4b5563; stroke-width: 1.6; fill: none; stroke-dasharray: 5 5; }
+  </style>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#4b5563"/>
+    </marker>
+  </defs>
+
+  <text x="660" y="42" text-anchor="middle" font-size="28" font-weight="700">GR00T-style VLA: VLM Context + Action Flow-Matching DiT</text>
+
+  <!-- Inputs -->
+  <rect x="34" y="70" width="170" height="120" fill="#e5e7eb" stroke="#000000" stroke-width="2"/>
+  <path d="M50 170 L96 112 L128 146 L152 118 L190 170 Z" fill="#9ca3af" stroke="#000000"/>
+  <circle cx="78" cy="102" r="13" fill="#f59e0b" stroke="#000000"/>
+  <text x="119" y="218" text-anchor="middle" font-size="17">camera image</text>
+  <text x="116" y="270" text-anchor="middle" font-size="16" font-family="monospace">"pick up the apple"</text>
+
+  <rect x="236" y="66" width="112" height="132" rx="16" class="box"/>
+  <text x="292" y="124" text-anchor="middle" font-size="18">Vision</text>
+  <text x="292" y="148" text-anchor="middle" font-size="18">Encoder</text>
+  <rect x="236" y="224" width="112" height="72" rx="14" class="box"/>
+  <text x="292" y="254" text-anchor="middle" font-size="18">Text</text>
+  <text x="292" y="278" text-anchor="middle" font-size="18">Tokenizer</text>
+
+  <!-- VLM -->
+  <rect x="405" y="58" width="130" height="220" rx="20" class="box"/>
+  <text x="470" y="150" text-anchor="middle" font-size="20">Eagle /</text>
+  <text x="470" y="176" text-anchor="middle" font-size="20">Cosmos VLM</text>
+  <text x="510" y="88" font-size="28">❄</text>
+
+  <!-- token stacks helper manually -->
+  <g>
+    <rect x="374" y="68" width="15" height="17" class="tokenV"/><rect x="374" y="90" width="15" height="17" class="tokenV"/><rect x="374" y="112" width="15" height="17" class="tokenV"/><rect x="374" y="134" width="15" height="17" class="tokenV"/><rect x="374" y="156" width="15" height="17" class="tokenV"/><rect x="374" y="178" width="15" height="17" class="tokenV"/>
+    <rect x="374" y="226" width="15" height="17" class="tokenT"/><rect x="374" y="248" width="15" height="17" class="tokenT"/><rect x="374" y="270" width="15" height="17" class="tokenT"/>
+    <rect x="550" y="86" width="15" height="17" class="tokenV"/><rect x="550" y="108" width="15" height="17" class="tokenV"/><rect x="550" y="130" width="15" height="17" class="tokenV"/><rect x="550" y="152" width="15" height="17" class="tokenV"/>
+    <rect x="550" y="206" width="15" height="17" class="tokenT"/><rect x="550" y="228" width="15" height="17" class="tokenT"/><rect x="550" y="250" width="15" height="17" class="tokenT"/>
+  </g>
+
+  <!-- State/action paths -->
+  <text x="72" y="364" font-size="18">Robot State</text>
+  <text x="236" y="364" font-size="18" font-style="italic">q<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <rect x="330" y="324" width="132" height="86" rx="14" class="emb"/>
+  <text x="396" y="360" text-anchor="middle" font-size="18">State</text>
+  <text x="396" y="384" text-anchor="middle" font-size="18">Encoder</text>
+  <rect x="528" y="338" width="15" height="17" class="tokenS"/><rect x="528" y="361" width="15" height="17" class="tokenS"/>
+
+  <text x="70" y="505" font-size="18">Noised Action</text>
+  <rect x="212" y="402" width="72" height="180" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="248" y="438" text-anchor="middle" font-size="18" font-style="italic">a<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <text x="248" y="478" text-anchor="middle" font-size="18" font-style="italic">a<tspan baseline-shift="sub" font-size="12">t+1</tspan></text>
+  <text x="248" y="518" text-anchor="middle" font-size="22">...</text>
+  <text x="248" y="560" text-anchor="middle" font-size="18" font-style="italic">a<tspan baseline-shift="sub" font-size="12">t+H-1</tspan></text>
+  <rect x="330" y="430" width="132" height="124" rx="14" class="emb"/>
+  <text x="396" y="482" text-anchor="middle" font-size="18">Action</text>
+  <text x="396" y="506" text-anchor="middle" font-size="18">Encoder</text>
+  <text x="396" y="530" text-anchor="middle" font-size="13">Fourier + time</text>
+  <g>
+    <rect x="528" y="426" width="15" height="17" class="tokenA"/><rect x="528" y="449" width="15" height="17" class="tokenA"/><rect x="528" y="472" width="15" height="17" class="tokenA"/><rect x="528" y="495" width="15" height="17" class="tokenA"/><rect x="528" y="518" width="15" height="17" class="tokenA"/><rect x="528" y="541" width="15" height="17" class="tokenA"/>
+  </g>
+
+  <!-- DiT -->
+  <rect x="610" y="296" width="320" height="274" rx="20" class="box"/>
+  <text x="770" y="616" text-anchor="middle" font-size="18">DiT Blocks x N</text>
+  <rect x="638" y="322" width="58" height="220" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
+  <text x="670" y="438" text-anchor="middle" font-size="16" transform="rotate(90 670 438)">Cross-Attention</text>
+  <rect x="720" y="322" width="58" height="220" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
+  <text x="752" y="438" text-anchor="middle" font-size="16" transform="rotate(90 752 438)">Self-Attention</text>
+  <text x="795" y="442" text-anchor="middle" font-size="32">...</text>
+  <rect x="842" y="322" width="58" height="220" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
+  <text x="874" y="438" text-anchor="middle" font-size="16" transform="rotate(90 874 438)">MLP + AdaLN</text>
+
+  <!-- Decoder and output -->
+  <g>
+    <rect x="968" y="350" width="15" height="17" class="tokenO"/><rect x="968" y="373" width="15" height="17" class="tokenO"/><rect x="968" y="396" width="15" height="17" class="tokenO"/><rect x="968" y="419" width="15" height="17" class="tokenO"/><rect x="968" y="442" width="15" height="17" class="tokenO"/><rect x="968" y="465" width="15" height="17" class="tokenO"/>
+  </g>
+  <rect x="1010" y="348" width="126" height="154" rx="16" class="emb"/>
+  <text x="1073" y="414" text-anchor="middle" font-size="18">Action</text>
+  <text x="1073" y="438" text-anchor="middle" font-size="18">Decoder</text>
+  <rect x="1184" y="376" width="72" height="124" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="1220" y="410" text-anchor="middle" font-size="18" font-style="italic">a<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <text x="1220" y="446" text-anchor="middle" font-size="18" font-style="italic">a<tspan baseline-shift="sub" font-size="12">t+1</tspan></text>
+  <text x="1220" y="474" text-anchor="middle" font-size="20">...</text>
+  <text x="1220" y="496" text-anchor="middle" font-size="16">velocity</text>
+
+  <!-- Legend -->
+  <rect x="876" y="85" width="34" height="34" rx="6" class="emb"/>
+  <text x="930" y="108" font-size="18">Embodiment-specific module</text>
+  <text x="882" y="168" font-size="30">❄</text>
+  <text x="930" y="166" font-size="18">Pre-trained / frozen backbone</text>
+
+  <!-- arrows -->
+  <path class="arrow" d="M204 130 H236"/>
+  <path class="arrow" d="M204 252 H236"/>
+  <path class="arrow" d="M348 130 H374"/>
+  <path class="arrow" d="M348 260 H374"/>
+  <path class="arrow" d="M565 168 H610 V318"/>
+  <path class="arrow" d="M270 358 H330"/>
+  <path class="arrow" d="M462 366 H528"/>
+  <path class="arrow" d="M543 366 H610"/>
+  <path class="arrow" d="M284 492 H330"/>
+  <path class="arrow" d="M462 492 H528"/>
+  <path class="arrow" d="M543 492 H610"/>
+  <path class="arrow" d="M930 426 H968"/>
+  <path class="arrow" d="M983 426 H1010"/>
+  <path class="arrow" d="M1136 426 H1184"/>
+  <path class="dash" d="M1220 500 V650 H248 V582"/>
+  <text x="660" y="684" text-anchor="middle" font-size="18">K flow-matching iterations</text>
+</svg>

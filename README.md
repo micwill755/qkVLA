@@ -14,6 +14,9 @@ robot action generation.
    denoising blocks.
 5. `qkvla/models/` - GR00T/pi0.5/Alpamayo-style model skeletons built from the
    shared modules.
+6. `docs/03_groot_walkthrough.md`, `docs/04_pi05_walkthrough.md`, and
+   `docs/05_alpamayo_walkthrough.md` - learner walkthroughs with architecture
+   diagrams.
 
 ## First Experiment
 

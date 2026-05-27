@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 740" role="img" aria-labelledby="title desc">
+  <title id="title">Detailed Alpamayo-style architecture</title>
+  <desc id="desc">A detailed Alpamayo-style architecture with multi-camera images, navigation text, egomotion history, reasoning VLA, expert trajectory decoder, action projections, diffusion loop, and trajectory output.</desc>
+  <rect width="1320" height="740" fill="#ffffff"/>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill: #000000; }
+    .box { fill: #f2f2f2; stroke: #4b5563; stroke-width: 2; }
+    .emb { fill: #d9ead3; stroke: #4b5563; stroke-width: 2; }
+    .tokV { fill: #c084fc; stroke: #4b5563; stroke-width: 1.2; }
+    .tokT { fill: #0b64c0; stroke: #4b5563; stroke-width: 1.2; }
+    .tokE { fill: #ef6f6c; stroke: #4b5563; stroke-width: 1.2; }
+    .tokA { fill: #fff0d2; stroke: #4b5563; stroke-width: 1.2; }
+    .tokO { fill: #ff9800; stroke: #4b5563; stroke-width: 1.2; }
+    .arrow { stroke: #4b5563; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+    .dash { stroke: #4b5563; stroke-width: 1.6; fill: none; stroke-dasharray: 5 5; }
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4b5563"/></marker></defs>
+
+  <text x="660" y="42" text-anchor="middle" font-size="28" font-weight="700">Alpamayo-style VLA: Chain-of-Causation Reasoning + Trajectory Diffusion Expert</text>
+
+  <!-- Inputs -->
+  <rect x="42" y="78" width="168" height="94" fill="#e5e7eb" stroke="#000000" stroke-width="2"/>
+  <path d="M55 155 L94 112 L122 138 L148 112 L196 155 Z" fill="#9ca3af" stroke="#000000"/>
+  <text x="126" y="200" text-anchor="middle" font-size="16">multi-camera video</text>
+  <text x="126" y="270" text-anchor="middle" font-size="15" font-family="monospace">"turn left safely"</text>
+  <text x="126" y="358" text-anchor="middle" font-size="16">egomotion history</text>
+  <text x="126" y="382" text-anchor="middle" font-size="14">(x,y,z,R) over time</text>
+
+  <rect x="258" y="88" width="130" height="78" rx="14" class="box"/><text x="323" y="121" text-anchor="middle" font-size="17">Vision</text><text x="323" y="144" text-anchor="middle" font-size="17">Processor</text>
+  <rect x="258" y="230" width="130" height="78" rx="14" class="box"/><text x="323" y="262" text-anchor="middle" font-size="17">Text</text><text x="323" y="285" text-anchor="middle" font-size="17">Tokenizer</text>
+  <rect x="258" y="350" width="130" height="78" rx="14" class="emb"/><text x="323" y="382" text-anchor="middle" font-size="17">Egomotion</text><text x="323" y="405" text-anchor="middle" font-size="17">Encoder</text>
+
+  <g>
+    <rect x="416" y="94" width="14" height="16" class="tokV"/><rect x="416" y="116" width="14" height="16" class="tokV"/><rect x="416" y="138" width="14" height="16" class="tokV"/>
+    <rect x="416" y="238" width="14" height="16" class="tokT"/><rect x="416" y="260" width="14" height="16" class="tokT"/><rect x="416" y="282" width="14" height="16" class="tokT"/>
+    <rect x="416" y="360" width="14" height="16" class="tokE"/><rect x="416" y="382" width="14" height="16" class="tokE"/><rect x="416" y="404" width="14" height="16" class="tokE"/>
+  </g>
+
+  <!-- Reasoning VLA -->
+  <rect x="478" y="124" width="150" height="238" rx="20" class="box"/>
+  <text x="553" y="218" text-anchor="middle" font-size="20">Cosmos</text>
+  <text x="553" y="246" text-anchor="middle" font-size="20">Reason VLM</text>
+  <text x="602" y="154" font-size="28">❄</text>
+
+  <rect x="700" y="112" width="210" height="102" rx="14" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="805" y="148" text-anchor="middle" font-size="17">Chain-of-Causation</text>
+  <text x="805" y="173" text-anchor="middle" font-size="17">reasoning text</text>
+  <text x="805" y="196" text-anchor="middle" font-size="14">interpretable plan</text>
+
+  <rect x="700" y="260" width="210" height="92" rx="14" class="emb"/>
+  <text x="805" y="296" text-anchor="middle" font-size="18">prompt KV cache</text>
+  <text x="805" y="321" text-anchor="middle" font-size="15">context for expert</text>
+
+  <!-- Trajectory path -->
+  <text x="62" y="545" font-size="18">Noisy Trajectory</text>
+  <rect x="210" y="472" width="82" height="148" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="251" y="510" text-anchor="middle" font-size="18">x<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <text x="251" y="548" text-anchor="middle" font-size="20">...</text>
+  <text x="251" y="585" text-anchor="middle" font-size="16">64 pts</text>
+
+  <rect x="342" y="474" width="154" height="120" rx="16" class="emb"/>
+  <text x="419" y="520" text-anchor="middle" font-size="18">action_in_proj</text>
+  <text x="419" y="546" text-anchor="middle" font-size="14">trajectory x + time t</text>
+  <g><rect x="530" y="466" width="14" height="16" class="tokA"/><rect x="530" y="488" width="14" height="16" class="tokA"/><rect x="530" y="510" width="14" height="16" class="tokA"/><rect x="530" y="532" width="14" height="16" class="tokA"/><rect x="530" y="554" width="14" height="16" class="tokA"/><rect x="530" y="576" width="14" height="16" class="tokA"/></g>
+
+  <rect x="610" y="438" width="310" height="178" rx="20" class="box"/>
+  <text x="765" y="650" text-anchor="middle" font-size="18">Expert Transformer Decoder</text>
+  <rect x="648" y="466" width="66" height="112" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/><text x="681" y="526" text-anchor="middle" font-size="15" transform="rotate(90 681 526)">Self-Attn</text>
+  <rect x="740" y="466" width="66" height="112" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/><text x="773" y="526" text-anchor="middle" font-size="15" transform="rotate(90 773 526)">KV Context</text>
+  <rect x="832" y="466" width="66" height="112" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/><text x="865" y="526" text-anchor="middle" font-size="15" transform="rotate(90 865 526)">MLP</text>
+
+  <g><rect x="958" y="472" width="14" height="16" class="tokO"/><rect x="958" y="494" width="14" height="16" class="tokO"/><rect x="958" y="516" width="14" height="16" class="tokO"/><rect x="958" y="538" width="14" height="16" class="tokO"/></g>
+  <rect x="1002" y="468" width="150" height="120" rx="16" class="emb"/>
+  <text x="1077" y="514" text-anchor="middle" font-size="18">action_out_proj</text>
+  <text x="1077" y="540" text-anchor="middle" font-size="14">hidden → trajectory</text>
+  <path d="M1190 560 C1230 520, 1250 500, 1278 486" stroke="#000000" stroke-width="4" fill="none"/>
+  <path d="M1190 560 C1228 558, 1254 560, 1288 578" stroke="#000000" stroke-width="3" fill="none" stroke-dasharray="5 5"/>
+  <text x="1238" y="622" text-anchor="middle" font-size="18">future trajectory</text>
+
+  <!-- Legend -->
+  <rect x="980" y="120" width="30" height="30" rx="5" class="emb"/><text x="1025" y="142" font-size="17">trainable expert/action modules</text>
+  <text x="984" y="194" font-size="28">❄</text><text x="1025" y="192" font-size="17">pre-trained reasoning VLM</text>
+
+  <!-- arrows -->
+  <path class="arrow" d="M210 130 H258"/><path class="arrow" d="M210 268 H258"/><path class="arrow" d="M210 384 H258"/>
+  <path class="arrow" d="M388 128 H416"/><path class="arrow" d="M388 270 H416"/><path class="arrow" d="M388 392 H416"/>
+  <path class="arrow" d="M430 244 H478"/><path class="arrow" d="M628 190 H700"/><path class="arrow" d="M628 292 H700"/>
+  <path class="arrow" d="M805 352 C805 394, 760 414, 760 438"/>
+  <path class="arrow" d="M292 546 H342"/><path class="arrow" d="M496 536 H530"/><path class="arrow" d="M544 536 H610"/>
+  <path class="arrow" d="M920 528 H958"/><path class="arrow" d="M972 528 H1002"/><path class="arrow" d="M1152 528 C1172 528, 1174 540, 1190 560"/>
+  <path class="dash" d="M1230 578 V688 H251 V620"/>
+  <text x="660" y="710" text-anchor="middle" font-size="18">Diffusion / flow sampling loop over future trajectory tokens</text>
+</svg>

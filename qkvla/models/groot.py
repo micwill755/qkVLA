@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 from qkvla.models.common import ToyVLMContext
-from qkvla.modules.action_denoiser import ActionDenoiserTransformer
+from qkvla.models.action_experts import GR00TActionFlowExpert
 
 
 class GR00TStyleVLA(nn.Module):
@@ -23,16 +23,25 @@ class GR00TStyleVLA(nn.Module):
         action_dim: int,
         horizon: int,
         model_dim: int = 256,
+        num_embodiments: int = 1,
+        expert_depth: int = 16,
     ) -> None:
         super().__init__()
         self.context_encoder = ToyVLMContext(
-            image_channels, patch_size, vocab_size, proprio_dim, model_dim
+            image_channels,
+            patch_size,
+            vocab_size,
+            proprio_dim,
+            model_dim,
+            include_proprio=False,
         )
-        self.action_expert = ActionDenoiserTransformer(
+        self.action_expert = GR00TActionFlowExpert(
+            state_dim=proprio_dim,
             action_dim=action_dim,
             horizon=horizon,
             model_dim=model_dim,
-            prediction_type="noise",
+            depth=expert_depth,
+            num_embodiments=num_embodiments,
         )
 
     def forward(
@@ -41,8 +50,14 @@ class GR00TStyleVLA(nn.Module):
         token_ids: torch.Tensor,
         proprio: torch.Tensor,
         noisy_actions: torch.Tensor,
-        diffusion_t: torch.Tensor,
+        flow_t: torch.Tensor,
+        embodiment_id: int = 0,
     ) -> torch.Tensor:
         context = self.context_encoder(images, token_ids, proprio)
-        return self.action_expert(noisy_actions, diffusion_t, context)
-
+        return self.action_expert(
+            proprio,
+            noisy_actions,
+            flow_t,
+            context,
+            embodiment_id,
+        )

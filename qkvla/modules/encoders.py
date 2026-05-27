@@ -73,3 +73,14 @@ class ProprioEncoder(nn.Module):
     def forward(self, proprio: torch.Tensor) -> torch.Tensor:
         return self.net(proprio)[:, None]
 
+
+class NumericSequenceEncoder(nn.Module):
+    """Projects a numeric history sequence into context tokens."""
+
+    def __init__(self, input_dim: int, model_dim: int, max_steps: int = 64) -> None:
+        super().__init__()
+        self.proj = nn.Linear(input_dim, model_dim)
+        self.pos = nn.Parameter(torch.zeros(1, max_steps, model_dim))
+
+    def forward(self, sequence: torch.Tensor) -> torch.Tensor:
+        return self.proj(sequence) + self.pos[:, : sequence.shape[1]]

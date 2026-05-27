@@ -4,7 +4,8 @@ import torch
 from torch import nn
 
 from qkvla.modules.embeddings import SinusoidalTimestepEmbedding
-from qkvla.modules.transformer import AdaLNTransformerBlock
+from qkvla.modules.norms import RMSNorm
+from qkvla.modules.transformer import AdaLNTransformerBlock, AdaRMSNormTransformerBlock
 
 
 class ActionDenoiserTransformer(nn.Module):
@@ -19,6 +20,7 @@ class ActionDenoiserTransformer(nn.Module):
         num_heads: int = 8,
         dropout: float = 0.0,
         prediction_type: str = "noise",
+        conditioning_norm: str = "adaln",
     ) -> None:
         super().__init__()
         self.action_dim = action_dim
@@ -27,9 +29,13 @@ class ActionDenoiserTransformer(nn.Module):
         self.action_in = nn.Linear(action_dim, model_dim)
         self.pos = nn.Parameter(torch.zeros(1, horizon, model_dim))
         self.time_emb = SinusoidalTimestepEmbedding(model_dim)
+        block_cls = {
+            "adaln": AdaLNTransformerBlock,
+            "adarms": AdaRMSNormTransformerBlock,
+        }[conditioning_norm]
         self.blocks = nn.ModuleList(
             [
-                AdaLNTransformerBlock(
+                block_cls(
                     model_dim,
                     num_heads,
                     model_dim,
@@ -39,7 +45,7 @@ class ActionDenoiserTransformer(nn.Module):
                 for _ in range(depth)
             ]
         )
-        self.norm = nn.LayerNorm(model_dim)
+        self.norm = RMSNorm(model_dim) if conditioning_norm == "adarms" else nn.LayerNorm(model_dim)
         self.action_out = nn.Linear(model_dim, action_dim)
 
     def forward(
@@ -55,4 +61,3 @@ class ActionDenoiserTransformer(nn.Module):
         for block in self.blocks:
             x = block(x, cond, context)
         return self.action_out(self.norm(x))
-

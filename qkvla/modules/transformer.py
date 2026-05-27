@@ -4,6 +4,7 @@ import torch
 from torch import nn
 
 from qkvla.modules.attention import MultiHeadCrossAttention, MultiHeadSelfAttention
+from qkvla.modules.norms import AdaptiveRMSNorm, RMSNorm
 
 
 class FeedForward(nn.Module):
@@ -101,3 +102,44 @@ class AdaLNTransformerBlock(nn.Module):
 def modulate(x: torch.Tensor, shift: torch.Tensor, scale: torch.Tensor) -> torch.Tensor:
     return x * (1 + scale[:, None]) + shift[:, None]
 
+
+class AdaRMSNormTransformerBlock(nn.Module):
+    """Transformer block with adaRMSNorm timestep conditioning.
+
+    This is useful for pi0/pi0.5-style flow action experts, where the continuous
+    flow time is injected directly into the action-expert transformer layers.
+    """
+
+    def __init__(
+        self,
+        dim: int,
+        num_heads: int,
+        cond_dim: int,
+        dropout: float = 0.0,
+        use_cross_attention: bool = False,
+    ) -> None:
+        super().__init__()
+        self.self_norm = AdaptiveRMSNorm(dim, cond_dim)
+        self.self_attn = MultiHeadSelfAttention(dim, num_heads, dropout)
+        self.cross_norm = RMSNorm(dim)
+        self.cross_attn = (
+            MultiHeadCrossAttention(dim, num_heads, dropout)
+            if use_cross_attention
+            else None
+        )
+        self.ffn_norm = AdaptiveRMSNorm(dim, cond_dim)
+        self.ffn = FeedForward(dim, dropout=dropout)
+
+    def forward(
+        self,
+        x: torch.Tensor,
+        cond: torch.Tensor,
+        context: torch.Tensor | None = None,
+    ) -> torch.Tensor:
+        normed_x, gate_sa = self.self_norm(x, cond)
+        x = x + gate_sa * self.self_attn(normed_x)
+        if self.cross_attn is not None and context is not None:
+            x = x + self.cross_attn(self.cross_norm(x), context)
+        normed_x, gate_ff = self.ffn_norm(x, cond)
+        x = x + gate_ff * self.ffn(normed_x)
+        return x

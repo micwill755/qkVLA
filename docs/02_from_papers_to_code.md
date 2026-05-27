@@ -10,13 +10,91 @@ These skeletons are inspired by public architecture descriptions:
 
 ```text
 GR00T N1:
-  dual-system VLA with VLM context and a diffusion transformer action module
+  dual-system VLA with VLM context and an action flow-matching DiT module
 
 pi0.5:
-  VLA with flow-matching action expert and heterogeneous co-training signals
+  VLA with flow-matching action expert, adaRMS-style time conditioning, and
+  heterogeneous co-training signals
 
 Alpamayo / Alpamayo-R1:
-  reasoning-first VLA with a diffusion trajectory/action expert
+  reasoning-first VLA with egomotion/history context and a diffusion trajectory
+  decoder
+```
+
+## Exactness Boundary
+
+We can make the local code exact only where the public sources expose enough
+detail. The current files now follow the published architecture patterns, but
+they still use local placeholder backbones instead of production-scale external
+models:
+
+```text
+GR00T N1 production backbone:
+  NVIDIA-Eagle / SmolLM-style VLM components are represented by ToyVLMContext.
+
+pi0.5 production backbone:
+  PaliGemma/Gemma/OpenPI-style VLM and projections are represented by
+  ToyVLMContext plus Pi05FlowActionExpert.
+
+Alpamayo production backbone:
+  Cosmos-Reason and multi-camera video preprocessing are represented by
+  ToyVLMContext plus egomotion-history tokens.
+```
+
+The action-generation side is where this repo is closest to the papers:
+
+```text
+GR00T-style: action flow-matching DiT expert
+pi0.5-style: flow-matching action expert with adaRMS-style time conditioning
+Alpamayo-style: diffusion trajectory decoder conditioned on reasoning/history
+```
+
+## Reference Code Inspected
+
+The local implementation was updated after inspecting these public files:
+
+```text
+Physical-Intelligence/openpi
+  src/openpi/models/pi0_config.py
+  src/openpi/models/pi0.py
+  src/openpi/models/gemma.py
+
+NVIDIA/Isaac-GR00T
+  gr00t/configs/model/gr00t_n1d7.py
+  gr00t/model/gr00t_n1d7/gr00t_n1d7.py
+  gr00t/model/modules/dit.py
+  gr00t/model/modules/flowmatching_modules.py
+  gr00t/model/modules/embodiment_conditioned_mlp.py
+
+autowarefoundation/alpamayo-autoware
+  src/alpamayo1_5/models/alpamayo1_5.py
+  src/alpamayo1_5/models/action_in_proj.py
+  src/alpamayo1_5/diffusion/flow_matching.py
+```
+
+Important mechanics copied into our local design:
+
+```text
+OpenPI pi0/pi0.5:
+  pi0.5 places state in discrete language tokens.
+  pi0.5 uses adaRMSNorm to inject the flow timestep.
+  flow path: x_t = t * noise + (1 - t) * actions in OpenPI code.
+  target: u_t = noise - actions.
+  sampling integrates from noise at t=1 toward actions at t=0.
+
+GR00T N1.7:
+  Cosmos/Qwen-style VLM backbone feeds a DiT/AlternateVLDiT action head.
+  state encoder is embodiment-specific.
+  action encoder is multi-embodiment and includes timestep features.
+  flow path: noisy = (1 - t) * noise + t * actions.
+  target: velocity = actions - noise.
+  inference uses Euler integration from random noise toward actions.
+
+Alpamayo 1.5:
+  reasoning VLA builds an expert from the VLM text config.
+  action_in_proj consumes noisy action x and diffusion/flow time t.
+  expert denoiser runs over future trajectory/action tokens.
+  action_out_proj maps expert hidden states back to trajectory action space.
 ```
 
 ## Shared Modules
@@ -47,13 +125,13 @@ System 2 context encoder:
   image tokens + language tokens + proprio token
 
 System 1 action expert:
-  noisy action chunk + diffusion timestep
+  noisy action chunk + flow timestep
   cross-attend to context tokens
-  predict action noise
+  predict action velocity
 ```
 
-This mirrors the dual-system idea: semantic context first, fast diffusion action
-generation second.
+This mirrors the dual-system idea: semantic context first, fast action
+flow-matching generation second.
 
 ## pi0.5-Style Skeleton
 
@@ -71,6 +149,7 @@ context encoder:
 
 flow action expert:
   noisy action chunk + continuous flow time
+  adaRMS-style timestep conditioning
   predict velocity field
 
 extra supervision heads:
@@ -92,7 +171,7 @@ Code idea:
 
 ```text
 context encoder:
-  image/language/history tokens
+  image/language/egomotion-history tokens
 
 reasoning bridge:
   small set of reasoning tokens cross-attends to context
