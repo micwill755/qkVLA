@@ -1,102 +1,115 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 720" role="img" aria-labelledby="title desc">
-  <title id="title">Detailed pi0.5-style architecture</title>
-  <desc id="desc">A detailed pi0.5 architecture diagram showing image tokens, prompt and discrete state tokens, PaliGemma VLM, subtask prediction, action expert suffix, adaRMS time conditioning, and flow-matching action output.</desc>
-  <rect width="1320" height="720" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1460 820" role="img" aria-labelledby="title desc">
+  <title id="title">OpenPI pi0.5 public architecture path</title>
+  <desc id="desc">Detailed OpenPI pi0.5 diagram showing image tokens, prompt plus discrete state tokens, PaliGemma prefix, action expert suffix, adaRMS time conditioning, flow matching loss, and reverse Euler sampling from t equals 1 to 0.</desc>
+  <rect width="1460" height="820" fill="#ffffff"/>
   <style>
-    text { font-family: Arial, Helvetica, sans-serif; fill: #000000; }
-    .box { fill: #f2f2f2; stroke: #4b5563; stroke-width: 2; }
-    .emb { fill: #d9ead3; stroke: #4b5563; stroke-width: 2; }
-    .tokI { fill: #c084fc; stroke: #4b5563; stroke-width: 1.2; }
-    .tokT { fill: #0b64c0; stroke: #4b5563; stroke-width: 1.2; }
-    .tokS { fill: #ef6f6c; stroke: #4b5563; stroke-width: 1.2; }
-    .tokA { fill: #fff0d2; stroke: #4b5563; stroke-width: 1.2; }
-    .tokO { fill: #ff9800; stroke: #4b5563; stroke-width: 1.2; }
-    .arrow { stroke: #4b5563; stroke-width: 2; fill: none; marker-end: url(#arrow); }
-    .dash { stroke: #4b5563; stroke-width: 1.6; fill: none; stroke-dasharray: 5 5; }
+    text { font-family: Arial, Helvetica, sans-serif; fill:#000; }
+    .box { fill:#f2f2f2; stroke:#3f4650; stroke-width:2; }
+    .vlm { fill:#e9edf7; stroke:#3f4650; stroke-width:2; }
+    .expert { fill:#f7b900; stroke:#3f4650; stroke-width:2; }
+    .head { fill:#d9ead3; stroke:#3f4650; stroke-width:2; }
+    .flow { fill:#fff1bf; stroke:#3f4650; stroke-width:2; }
+    .tokI { fill:#b985f4; stroke:#3f4650; stroke-width:1; }
+    .tokT { fill:#0867c9; stroke:#3f4650; stroke-width:1; }
+    .tokS { fill:#ef6f6c; stroke:#3f4650; stroke-width:1; }
+    .tokA { fill:#ffe6b8; stroke:#3f4650; stroke-width:1; }
+    .tokO { fill:#ff9800; stroke:#3f4650; stroke-width:1; }
+    .arrow { stroke:#3f4650; stroke-width:2.2; fill:none; marker-end:url(#arrow); }
+    .dash { stroke:#3f4650; stroke-width:1.8; fill:none; stroke-dasharray:6 6; }
   </style>
-  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#4b5563"/></marker></defs>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#3f4650"/></marker></defs>
 
-  <text x="660" y="42" text-anchor="middle" font-size="28" font-weight="700">pi0.5-style VLA: Discrete State Prefix + adaRMS Flow Expert</text>
+  <text x="730" y="42" text-anchor="middle" font-size="29" font-weight="700">OpenPI pi0.5: Prefix/Suffix PaliGemma + adaRMS Flow Action Expert</text>
 
-  <!-- Prefix -->
-  <rect x="50" y="78" width="150" height="100" fill="#e5e7eb" stroke="#000000" stroke-width="2"/>
-  <path d="M62 162 L98 116 L124 140 L144 118 L188 162 Z" fill="#9ca3af" stroke="#000000"/>
-  <text x="125" y="205" text-anchor="middle" font-size="16">images</text>
-  <text x="122" y="264" text-anchor="middle" font-size="15" font-family="monospace">"clean the room"</text>
-  <text x="122" y="345" text-anchor="middle" font-size="15">state serialized</text>
-  <text x="122" y="367" text-anchor="middle" font-size="15">as tokens</text>
+  <!-- Distinct prefix/suffix layout -->
+  <line x1="40" y1="382" x2="1420" y2="382" stroke="#d1d5db" stroke-width="2"/>
+  <text x="60" y="86" font-size="20" font-weight="700">Prefix: observation and instruction</text>
+  <text x="60" y="426" font-size="20" font-weight="700">Suffix: noisy action trajectory</text>
 
-  <rect x="242" y="75" width="122" height="78" rx="14" class="box"/>
-  <text x="303" y="107" text-anchor="middle" font-size="17">SigLIP /</text><text x="303" y="130" text-anchor="middle" font-size="17">Vision</text>
-  <rect x="242" y="218" width="122" height="78" rx="14" class="box"/>
-  <text x="303" y="250" text-anchor="middle" font-size="17">Prompt</text><text x="303" y="273" text-anchor="middle" font-size="17">Tokenizer</text>
-  <rect x="242" y="330" width="122" height="78" rx="14" class="box"/>
-  <text x="303" y="362" text-anchor="middle" font-size="17">State</text><text x="303" y="385" text-anchor="middle" font-size="17">Tokenizer</text>
+  <!-- Prefix inputs -->
+  <rect x="60" y="110" width="155" height="96" fill="#e5e7eb" stroke="#000" stroke-width="2"/>
+  <path d="M74 190 L112 146 L138 170 L166 142 L202 190 Z" fill="#9ca3af" stroke="#000"/>
+  <text x="138" y="232" text-anchor="middle" font-size="16">3 image views</text>
+  <rect x="60" y="264" width="155" height="52" rx="8" fill="#fff" stroke="#3f4650" stroke-width="2"/>
+  <text x="138" y="296" text-anchor="middle" font-size="15">prompt + state tokens</text>
+
+  <rect x="270" y="112" width="138" height="76" rx="14" class="box"/>
+  <text x="339" y="144" text-anchor="middle" font-size="17">SigLIP</text>
+  <text x="339" y="167" text-anchor="middle" font-size="14">image encoder</text>
+  <rect x="270" y="254" width="138" height="76" rx="14" class="box"/>
+  <text x="339" y="287" text-anchor="middle" font-size="17">Tokenizer</text>
+  <text x="339" y="310" text-anchor="middle" font-size="14">text + discrete state</text>
 
   <g>
-    <rect x="392" y="78" width="14" height="16" class="tokI"/><rect x="392" y="100" width="14" height="16" class="tokI"/><rect x="392" y="122" width="14" height="16" class="tokI"/>
-    <rect x="392" y="225" width="14" height="16" class="tokT"/><rect x="392" y="247" width="14" height="16" class="tokT"/><rect x="392" y="269" width="14" height="16" class="tokT"/>
-    <rect x="392" y="337" width="14" height="16" class="tokS"/><rect x="392" y="359" width="14" height="16" class="tokS"/><rect x="392" y="381" width="14" height="16" class="tokS"/>
+    <rect x="440" y="120" width="14" height="16" class="tokI"/><rect x="440" y="142" width="14" height="16" class="tokI"/><rect x="440" y="164" width="14" height="16" class="tokI"/><rect x="440" y="186" width="14" height="16" class="tokI"/>
+    <rect x="440" y="260" width="14" height="16" class="tokT"/><rect x="440" y="282" width="14" height="16" class="tokT"/><rect x="440" y="304" width="14" height="16" class="tokS"/><rect x="440" y="326" width="14" height="16" class="tokS"/>
   </g>
 
-  <rect x="450" y="118" width="140" height="228" rx="20" class="box"/>
-  <text x="520" y="214" text-anchor="middle" font-size="20">PaliGemma</text>
-  <text x="520" y="242" text-anchor="middle" font-size="20">VLM</text>
-  <text x="560" y="148" font-size="28">❄</text>
-  <g>
-    <rect x="610" y="148" width="14" height="16" class="tokI"/><rect x="610" y="170" width="14" height="16" class="tokI"/>
-    <rect x="610" y="220" width="14" height="16" class="tokT"/><rect x="610" y="242" width="14" height="16" class="tokS"/>
-  </g>
+  <!-- PaliGemma two-model stack -->
+  <rect x="500" y="104" width="210" height="238" rx="22" class="vlm"/>
+  <text x="605" y="184" text-anchor="middle" font-size="21">PaliGemma</text>
+  <text x="605" y="212" text-anchor="middle" font-size="17">VLM prefix stream</text>
+  <text x="605" y="244" text-anchor="middle" font-size="14">full attention over image/text/state</text>
+  <text x="672" y="136" font-size="28">❄</text>
+  <rect x="742" y="142" width="164" height="82" rx="14" class="head"/>
+  <text x="824" y="176" text-anchor="middle" font-size="17">prefix output</text>
+  <text x="824" y="199" text-anchor="middle" font-size="14">KV cache / context</text>
+  <rect x="742" y="260" width="164" height="82" rx="14" class="head"/>
+  <text x="824" y="294" text-anchor="middle" font-size="17">semantic head</text>
+  <text x="824" y="317" text-anchor="middle" font-size="14">subtask supervision</text>
 
-  <rect x="690" y="110" width="190" height="88" rx="14" class="emb"/>
-  <text x="785" y="147" text-anchor="middle" font-size="18">Subtask</text>
-  <text x="785" y="171" text-anchor="middle" font-size="18">Prediction</text>
-  <rect x="934" y="116" width="190" height="76" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
-  <text x="1029" y="160" text-anchor="middle" font-size="17">"pick up pillow"</text>
+  <!-- Suffix path -->
+  <rect x="62" y="468" width="92" height="146" rx="12" fill="#fff" stroke="#3f4650" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="108" y="506" text-anchor="middle" font-size="18">x<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <text x="108" y="544" text-anchor="middle" font-size="19">...</text>
+  <text x="108" y="580" text-anchor="middle" font-size="15">H actions</text>
+  <rect x="216" y="480" width="150" height="94" rx="14" class="head"/>
+  <text x="291" y="516" text-anchor="middle" font-size="17">action_in_proj</text>
+  <text x="291" y="540" text-anchor="middle" font-size="14">linear action tokens</text>
 
-  <!-- Action suffix -->
-  <text x="66" y="515" font-size="18">Noised Action</text>
-  <rect x="205" y="430" width="76" height="160" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
-  <text x="243" y="472" text-anchor="middle" font-size="18" font-style="italic">x<tspan baseline-shift="sub" font-size="12">t</tspan></text>
-  <text x="243" y="514" text-anchor="middle" font-size="20">...</text>
-  <text x="243" y="555" text-anchor="middle" font-size="18">H actions</text>
+  <rect x="216" y="626" width="150" height="94" rx="14" class="flow"/>
+  <text x="291" y="660" text-anchor="middle" font-size="17">time MLP</text>
+  <text x="291" y="684" text-anchor="middle" font-size="14">sincos τ → cond</text>
+  <text x="291" y="706" text-anchor="middle" font-size="13">only in pi0.5</text>
 
-  <rect x="340" y="442" width="150" height="112" rx="16" class="emb"/>
-  <text x="415" y="486" text-anchor="middle" font-size="18">Action</text>
-  <text x="415" y="510" text-anchor="middle" font-size="18">Projection</text>
-  <g><rect x="524" y="440" width="14" height="16" class="tokA"/><rect x="524" y="462" width="14" height="16" class="tokA"/><rect x="524" y="484" width="14" height="16" class="tokA"/><rect x="524" y="506" width="14" height="16" class="tokA"/><rect x="524" y="528" width="14" height="16" class="tokA"/></g>
+  <g><rect x="405" y="500" width="14" height="16" class="tokA"/><rect x="405" y="522" width="14" height="16" class="tokA"/><rect x="405" y="544" width="14" height="16" class="tokA"/><rect x="405" y="566" width="14" height="16" class="tokA"/></g>
+  <rect x="470" y="462" width="260" height="194" rx="22" class="expert"/>
+  <text x="600" y="446" text-anchor="middle" font-size="18" font-weight="700">Gemma action expert suffix</text>
+  <rect x="502" y="494" width="64" height="118" rx="8" fill="#d9d9d9" stroke="#3f4650" stroke-width="2"/>
+  <text x="534" y="558" text-anchor="middle" font-size="15" transform="rotate(90 534 558)">causal/self attn</text>
+  <rect x="586" y="494" width="64" height="118" rx="8" fill="#d9d9d9" stroke="#3f4650" stroke-width="2"/>
+  <text x="618" y="558" text-anchor="middle" font-size="15" transform="rotate(90 618 558)">adaRMSNorm</text>
+  <rect x="670" y="494" width="40" height="118" rx="8" fill="#d9d9d9" stroke="#3f4650" stroke-width="2"/>
+  <text x="690" y="558" text-anchor="middle" font-size="15" transform="rotate(90 690 558)">MLP</text>
 
-  <rect x="600" y="402" width="330" height="188" rx="20" class="box"/>
-  <text x="765" y="626" text-anchor="middle" font-size="18">Action Expert Transformer</text>
-  <rect x="635" y="430" width="68" height="122" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
-  <text x="669" y="496" text-anchor="middle" font-size="15" transform="rotate(90 669 496)">Self-Attn</text>
-  <rect x="730" y="430" width="68" height="122" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
-  <text x="764" y="496" text-anchor="middle" font-size="15" transform="rotate(90 764 496)">adaRMSNorm</text>
-  <rect x="825" y="430" width="68" height="122" rx="8" fill="#d9d9d9" stroke="#4b5563" stroke-width="2"/>
-  <text x="859" y="496" text-anchor="middle" font-size="15" transform="rotate(90 859 496)">MLP</text>
-  <text x="765" y="386" text-anchor="middle" font-size="16">flow timestep τ conditions every expert layer</text>
+  <g><rect x="770" y="506" width="14" height="16" class="tokO"/><rect x="770" y="528" width="14" height="16" class="tokO"/><rect x="770" y="550" width="14" height="16" class="tokO"/><rect x="770" y="572" width="14" height="16" class="tokO"/></g>
+  <rect x="820" y="492" width="148" height="104" rx="14" class="head"/>
+  <text x="894" y="532" text-anchor="middle" font-size="17">action_out_proj</text>
+  <text x="894" y="556" text-anchor="middle" font-size="14">last H suffix tokens</text>
+  <rect x="1010" y="504" width="116" height="78" rx="12" fill="#fff" stroke="#3f4650" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="1068" y="537" text-anchor="middle" font-size="18">v<tspan baseline-shift="sub" font-size="12">t</tspan></text>
+  <text x="1068" y="562" text-anchor="middle" font-size="14">noise - action</text>
 
-  <g><rect x="968" y="438" width="14" height="16" class="tokO"/><rect x="968" y="460" width="14" height="16" class="tokO"/><rect x="968" y="482" width="14" height="16" class="tokO"/><rect x="968" y="504" width="14" height="16" class="tokO"/></g>
-  <rect x="1018" y="434" width="142" height="112" rx="16" class="emb"/>
-  <text x="1089" y="478" text-anchor="middle" font-size="18">Velocity</text>
-  <text x="1089" y="502" text-anchor="middle" font-size="18">Head</text>
+  <!-- Equations and sampling -->
+  <rect x="1000" y="92" width="380" height="180" rx="16" class="flow"/>
+  <text x="1190" y="126" text-anchor="middle" font-size="17" font-weight="700">OpenPI flow convention</text>
+  <text x="1190" y="160" text-anchor="middle" font-size="16">τ ~ Beta(1.5, 1) · 0.999 + 0.001</text>
+  <text x="1190" y="190" text-anchor="middle" font-size="16">x<tspan baseline-shift="sub" font-size="12">τ</tspan> = τ · noise + (1 - τ) · actions</text>
+  <text x="1190" y="220" text-anchor="middle" font-size="16">target u<tspan baseline-shift="sub" font-size="12">τ</tspan> = noise - actions</text>
+  <text x="1190" y="250" text-anchor="middle" font-size="16">sample: τ = 1 → 0, x ← x + dt · v</text>
 
-  <rect x="1194" y="452" width="80" height="84" rx="12" fill="#ffffff" stroke="#4b5563" stroke-width="2" stroke-dasharray="7 6"/>
-  <text x="1234" y="487" text-anchor="middle" font-size="18">u<tspan baseline-shift="sub" font-size="12">t</tspan></text>
-  <text x="1234" y="514" text-anchor="middle" font-size="14">noise-actions</text>
-
-  <!-- Legend -->
-  <rect x="895" y="250" width="30" height="30" rx="5" class="emb"/><text x="940" y="272" font-size="17">trainable action modules</text>
-  <text x="899" y="324" font-size="28">❄</text><text x="940" y="322" font-size="17">pre-trained VLM</text>
+  <rect x="1010" y="322" width="250" height="92" rx="14" class="box"/>
+  <text x="1135" y="356" text-anchor="middle" font-size="17">attention mask</text>
+  <text x="1135" y="380" text-anchor="middle" font-size="14">prefix cached, suffix attends to</text>
+  <text x="1135" y="402" text-anchor="middle" font-size="14">prefix + allowed suffix tokens</text>
 
   <!-- arrows -->
-  <path class="arrow" d="M200 128 H242"/><path class="arrow" d="M200 258 H242"/><path class="arrow" d="M200 360 H242"/>
-  <path class="arrow" d="M364 114 H392"/><path class="arrow" d="M364 258 H392"/><path class="arrow" d="M364 370 H392"/>
-  <path class="arrow" d="M406 232 H450"/><path class="arrow" d="M624 232 C660 232, 650 160, 690 154"/>
-  <path class="arrow" d="M880 154 H934"/>
-  <path class="arrow" d="M624 242 C690 300, 652 402, 650 430"/>
-  <path class="arrow" d="M281 510 H340"/><path class="arrow" d="M490 498 H524"/><path class="arrow" d="M538 498 H600"/>
-  <path class="arrow" d="M930 492 H968"/><path class="arrow" d="M982 492 H1018"/><path class="arrow" d="M1160 494 H1194"/>
-  <path class="dash" d="M1234 536 V650 H243 V590"/>
-  <text x="660" y="684" text-anchor="middle" font-size="18">Euler flow integration: start from noise at t=1, step toward actions at t=0</text>
+  <path class="arrow" d="M215 158 H270"/><path class="arrow" d="M215 290 H270"/><path class="arrow" d="M408 150 H440"/><path class="arrow" d="M408 292 H440"/>
+  <path class="arrow" d="M454 224 H500"/><path class="arrow" d="M710 182 H742"/><path class="arrow" d="M710 248 C738 250, 720 300, 742 302"/>
+  <path class="arrow" d="M154 542 H216"/><path class="arrow" d="M366 528 H405"/><path class="arrow" d="M419 528 H470"/>
+  <path class="arrow" d="M366 674 C420 674, 418 590, 470 574"/>
+  <path class="arrow" d="M906 184 C945 184, 932 500, 730 518"/>
+  <path class="arrow" d="M730 546 H770"/><path class="arrow" d="M784 546 H820"/><path class="arrow" d="M968 546 H1010"/>
+  <path class="dash" d="M1068 582 V752 H108 V614"/>
+  <text x="640" y="786" text-anchor="middle" font-size="17">Reverse Euler integration reuses the prefix KV cache at each denoising step</text>
 </svg>
